@@ -1,0 +1,42 @@
+name: CI pipeline 
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+      ci:
+        name: Run CI
+        runs-on: ubuntu-latest
+
+        defaults:
+          run:
+            working-directory: ./codebase/rdicidr-0.1.0
+
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+
+          - name: Set up Node.js
+            uses: actions/setup-node@v3
+            with:
+              node-version: '16'
+              cache: 'npm'
+
+
+          - name: Install dependencies
+            run: npm install
+
+          - name: Run lint
+            run: npm run lint
+
+          - name: Run tests
+            run: CI=true npm run test
+
+          - name: Build project
+            run: npm run build  
